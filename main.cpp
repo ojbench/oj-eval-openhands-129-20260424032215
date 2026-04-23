@@ -1,5 +1,9 @@
 
 #include <iostream>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
 using namespace std;
 
 int main() {
@@ -7,25 +11,36 @@ int main() {
     cin.tie(nullptr);
     
     int n;
-    cin >> n;
+    if (!(cin >> n)) {
+        return 0;
+    }
+    
+    vector<string> results;
     
     for (int i = 0; i < n; i++) {
-        string s;
-        cin >> s;
+        string line;
+        cin.ignore();
+        getline(cin, line);
         
-        int balance = 0;
-        int max_depth = 0;
+        // Count variable declarations and scope levels
+        int scope_level = 0;
+        int max_scope = 0;
+        set<string> variables;
         
-        for (char c : s) {
-            if (c == '(') {
-                balance++;
-                max_depth = max(max_depth, balance);
-            } else if (c == ')') {
-                balance--;
+        for (char c : line) {
+            if (c == '{') {
+                scope_level++;
+                max_scope = max(max_scope, scope_level);
+            } else if (c == '}') {
+                scope_level--;
             }
         }
         
-        cout << max_depth << "\n";
+        results.push_back(to_string(max_scope));
+    }
+    
+    for (const string& result : results) {
+        cout << result << "\n";
     }
     
     return 0;
